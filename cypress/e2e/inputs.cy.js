@@ -46,4 +46,13 @@ describe('Imput Forms Tests', () => {
 
     })
   })
+  it('Check different checkbox actions',() => {
+
+    // get all checkboxes, select JAVA and verify
+    cy.get('[type="checkbox"]').then((checkbox) => {
+      cy.wrap(checkbox).eq(1).check().should('be.checked');
+      // UNCHECK JAVA
+      cy.wrap(checkbox).eq(1).uncheck().should('not.be.checked');
+    })
+  })
 });
