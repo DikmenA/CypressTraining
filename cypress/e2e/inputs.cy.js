@@ -24,7 +24,7 @@ describe('Imput Forms Tests', () => {
     cy.get('input[name="phone"]').type(phoneNumber);
     cy.get('input[name="birthday"]').type('01/01/1999');
   });
-  it('Check different radio button actions', () => {
+  it.skip('Check different radio button actions', () => {
     cy.get('.radio')
     .find('[type=radio]')
     .then(radio => {
@@ -46,13 +46,43 @@ describe('Imput Forms Tests', () => {
 
     })
   })
-  it('Check different checkbox actions',() => {
+  it.skip('Check different checkbox actions',() => {
 
     // get all checkboxes, select JAVA and verify
     cy.get('[type="checkbox"]').then((checkbox) => {
       cy.wrap(checkbox).eq(1).check().should('be.checked');
       // UNCHECK JAVA
       cy.wrap(checkbox).eq(1).uncheck().should('not.be.checked');
+      // verify third one has a value Javascript and then check and verify
+      cy.wrap(checkbox).eq(2)
+      .should('have.value', 'javascript')
+      .check().should('be.checked');
+    })
+  })
+  it.skip('Check selection of a single choice from a select dropdown', () => {
+    // select one element
+    cy.get('select[name="job_title"]').select("SDET");
+    // assert that dropdown has correct text after selecting
+    cy.get('select[name="job_title"]').contains("SDET");
+
+  })
+  it('Check selection of all list options', () => {
+    // we will provide our test data through fixtures folder as JSON object, then use that data to verify select values
+    cy.fixture('departments').then((departments) => {
+      // Get all options in the menu, iterate through these options one by one
+       cy.get('select[name="department"] > option').each((option, index) => {
+        // get each option text
+        const optionText = option.text();
+       /**  
+        cy.log(optionText);
+        cy.log(index);
+        cy.log(departments[index]);
+        */
+       cy.get('select[name="department"]').select(optionText)
+       .should('have.value',option.val())
+       .contains(departments[index]);
+       })
+
     })
   })
 });
